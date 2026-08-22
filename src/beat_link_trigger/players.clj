@@ -796,13 +796,21 @@
 
 (defn- update-slot-labels
   "Updates the USB/SD labels of a player cell in case the device is an
-  XDJ-XZ or -AZ, which have two USB slots instead."
+  XDJ-XZ, XDJ-AZ, or CDJ-3000X, which have two USB slots instead."
   [cell ^DeviceAnnouncement device]
   (seesaw/invoke-soon
-    (if (or (= "XDJ-XZ" (.getDeviceName device)) (.isXdjAz device))
+    (cond
+      (= "XDJ-XZ" (.getDeviceName device))
       (do
-        (seesaw/value! (seesaw/select cell [:#sd-label]) (if (.isXdjAz device) "USB 2:" "USB 1:"))
-        (seesaw/value! (seesaw/select cell [:#usb-label]) (if (.isXdjAz device) "USB 1:" "USB 2:")))
+        (seesaw/value! (seesaw/select cell [:#sd-label]) "USB 1:")
+        (seesaw/value! (seesaw/select cell [:#usb-label]) "USB 2:"))
+
+      (or (.isXdjAz device) (.isCdj3000x device))
+      (do
+        (seesaw/value! (seesaw/select cell [:#sd-label]) "USB 2:")
+        (seesaw/value! (seesaw/select cell [:#usb-label]) "USB 1:"))
+
+      :else
       (do
         (seesaw/value! (seesaw/select cell [:#sd-label]) "SD:")
         (seesaw/value! (seesaw/select cell [:#usb-label]) "USB:")))))
@@ -863,9 +871,9 @@
   this default logic by setting a value under the key
   `:player-status-columns` in the trigger globals.
 
-  Also updates the USB/SD labels in case the device is an XDJ-XZ,
-  which has two USB slots instead. If we are in Opus Quad mode, the
-  labels will already be in the right state."
+  Also updates the USB/SD labels in case the device has two USB slots
+  instead. If we are in Opus Quad mode, the labels will already be in
+  the right state."
   [_ players no-players]
   (let [visible-players (keep-indexed (fn [index player]
                                         (when-let [device (.getLatestAnnouncementFrom device-finder (inc index))]
