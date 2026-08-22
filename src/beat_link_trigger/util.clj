@@ -467,9 +467,11 @@
   album artwork for the type of media being played in the specified
   player number, if any."
   [^Long player]
-  (let [^CdjStatus status (when (.isRunning virtual-cdj) (.getLatestStatusFor virtual-cdj player))
-        xdj-xz            (when status (str/starts-with? (.getDeviceName status) "XDJ-XZ"))
-        slot              (when status (.getTrackSourceSlot status))]
+  (let [^CdjStatus status  (when (.isRunning virtual-cdj) (.getLatestStatusFor virtual-cdj player))
+        device-name        (when status (.getDeviceName status))
+        sd-slot-is-usb     (when status (or (str/starts-with? device-name "XDJ-XZ")
+                                            (#{"XDJ-AZ" "CDJ-3000X"} device-name)))
+        slot               (when status (.getTrackSourceSlot status))]
     (cond
       (nil? status)
       "images/NoTrack.png"
@@ -477,8 +479,8 @@
       (= CdjStatus$TrackType/CD_DIGITAL_AUDIO (.getTrackType status))
       "images/CDDAlogo.png"
 
-      (and xdj-xz (= slot CdjStatus$TrackSourceSlot/SD_SLOT))
-      "images/USB.png"  ; The XDJ-XZ has two USB slots, one pretends to be SD for backwards compatibility.
+      (and sd-slot-is-usb (= slot CdjStatus$TrackSourceSlot/SD_SLOT))
+      "images/USB.png"  ; These devices have two USB slots, one pretends to be SD for backwards compatibility.
 
       :else
       (case-enum slot
