@@ -1,4 +1,4 @@
-(defproject beat-link-trigger :lein-v
+(defproject beat-link-trigger "8.1.0-9c5s-SNAPSHOT"
   :description "Trigger events and automate shows in response to CDJ activity."
   :url "https://github.com/Deep-Symmetry/beat-link-trigger"
   :scm {:name "git" :url "https://github.com/Deep-Symmetry/beat-link-trigger"}
