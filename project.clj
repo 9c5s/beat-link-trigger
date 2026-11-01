@@ -9,7 +9,7 @@
                  [org.clojure/data.csv "1.1.1"]
                  [org.clojure/tools.cli "1.4.256"]
                  [org.deepsymmetry/electro "0.1.4"]
-                 [org.deepsymmetry/beat-link "8.1.0-cdj3000x-SNAPSHOT"]
+                 [org.deepsymmetry/beat-link "8.1.0-9c5s-SNAPSHOT"]
                  [beat-carabiner "8.1.0-SNAPSHOT" :exclusions [org.deepsymmetry/beat-link]]
                  [cheshire "6.2.0"]
                  [cider/cider-nrepl "0.63.1"]
